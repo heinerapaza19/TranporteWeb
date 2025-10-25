@@ -1,0 +1,9 @@
+/* Archivo base de estilos */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* O simplemente deja algo simple: */
+body {
+    background-color: #f8fafc;
+}
