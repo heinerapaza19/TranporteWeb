@@ -1,0 +1,198 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
+class ChoferSeeder extends Seeder
+{
+    public function run(): void
+    {
+        DB::table('choferes')->insert([
+            // 🚍 EMPRESA 1 - San Román
+            [
+                'nombres' => 'Juan',
+                'apellidos' => 'Mamani',
+                'dni' => '45678912',
+                'licencia' => 'A-IIb',
+                'telefono' => '951234567',
+                'ruta_asignada' => 'Ruta 1 - Central',
+                'estado_licencia' => 'Activa',
+                'educacion_vial' => 'Aprobado',
+                'empresa_id' => 1,
+            ],
+            [
+                'nombres' => 'José',
+                'apellidos' => 'Cruz',
+                'dni' => '45678913',
+                'licencia' => 'A-I',
+                'telefono' => '951111111',
+                'ruta_asignada' => 'Ruta 2 - Sur',
+                'estado_licencia' => 'Activa',
+                'educacion_vial' => 'Aprobado',
+                'empresa_id' => 1,
+            ],
+            [
+                'nombres' => 'Miguel',
+                'apellidos' => 'Apaza',
+                'dni' => '45678914',
+                'licencia' => 'A-IIa',
+                'telefono' => '951222222',
+                'ruta_asignada' => 'Ruta 3 - Norte',
+                'estado_licencia' => 'Activa',
+                'educacion_vial' => 'Pendiente',
+                'empresa_id' => 1,
+            ],
+            [
+                'nombres' => 'Ruben',
+                'apellidos' => 'Puma',
+                'dni' => '45678915',
+                'licencia' => 'A-IIb',
+                'telefono' => '951333333',
+                'ruta_asignada' => 'Ruta 4 - Este',
+                'estado_licencia' => 'Inactiva',
+                'educacion_vial' => 'Reprobado',
+                'empresa_id' => 1,
+            ],
+
+            // 🚍 EMPRESA 2 - Línea 18
+            [
+                'nombres' => 'Carlos',
+                'apellidos' => 'Quispe',
+                'dni' => '78945612',
+                'licencia' => 'A-I',
+                'telefono' => '940321654',
+                'ruta_asignada' => 'Ruta 1 - Plaza',
+                'estado_licencia' => 'Activa',
+                'educacion_vial' => 'Aprobado',
+                'empresa_id' => 2,
+            ],
+            [
+                'nombres' => 'Julio',
+                'apellidos' => 'Coila',
+                'dni' => '78945613',
+                'licencia' => 'A-IIb',
+                'telefono' => '940321655',
+                'ruta_asignada' => 'Ruta 2 - Centro',
+                'estado_licencia' => 'Activa',
+                'educacion_vial' => 'Pendiente',
+                'empresa_id' => 2,
+            ],
+            [
+                'nombres' => 'Hugo',
+                'apellidos' => 'Callata',
+                'dni' => '78945614',
+                'licencia' => 'A-IIIa',
+                'telefono' => '940321656',
+                'ruta_asignada' => 'Ruta 3 - Aeropuerto',
+                'estado_licencia' => 'Activa',
+                'educacion_vial' => 'Aprobado',
+                'empresa_id' => 2,
+            ],
+            [
+                'nombres' => 'Luis',
+                'apellidos' => 'Ticona',
+                'dni' => '78945615',
+                'licencia' => 'A-IIa',
+                'telefono' => '940321657',
+                'ruta_asignada' => 'Ruta 4 - Terminal',
+                'estado_licencia' => 'Inactiva',
+                'educacion_vial' => 'Reprobado',
+                'empresa_id' => 2,
+            ],
+
+            // 🚍 EMPRESA 3 - Línea 22
+            [
+                'nombres' => 'Pedro',
+                'apellidos' => 'Huanca',
+                'dni' => '65478932',
+                'licencia' => 'A-IIIa',
+                'telefono' => '951222333',
+                'ruta_asignada' => 'Ruta 1 - Mercado Túpac',
+                'estado_licencia' => 'Activa',
+                'educacion_vial' => 'Aprobado',
+                'empresa_id' => 3,
+            ],
+            [
+                'nombres' => 'Raul',
+                'apellidos' => 'Choque',
+                'dni' => '65478933',
+                'licencia' => 'A-IIb',
+                'telefono' => '951222334',
+                'ruta_asignada' => 'Ruta 2 - Los Andes',
+                'estado_licencia' => 'Activa',
+                'educacion_vial' => 'Aprobado',
+                'empresa_id' => 3,
+            ],
+            [
+                'nombres' => 'Oscar',
+                'apellidos' => 'Flores',
+                'dni' => '65478934',
+                'licencia' => 'A-I',
+                'telefono' => '951222335',
+                'ruta_asignada' => 'Ruta 3 - Las Flores',
+                'estado_licencia' => 'Pendiente',
+                'educacion_vial' => 'Pendiente',
+                'empresa_id' => 3,
+            ],
+            [
+                'nombres' => 'Jorge',
+                'apellidos' => 'Quenta',
+                'dni' => '65478935',
+                'licencia' => 'A-IIa',
+                'telefono' => '951222336',
+                'ruta_asignada' => 'Ruta 4 - San Martín',
+                'estado_licencia' => 'Activa',
+                'educacion_vial' => 'Aprobado',
+                'empresa_id' => 3,
+            ],
+
+            // 🚍 EMPRESA 4 - Línea 55
+            [
+                'nombres' => 'Luis',
+                'apellidos' => 'Condori',
+                'dni' => '78645123',
+                'licencia' => 'A-IIa',
+                'telefono' => '950987654',
+                'ruta_asignada' => 'Ruta 1 - Terminal',
+                'estado_licencia' => 'Activa',
+                'educacion_vial' => 'Reprobado',
+                'empresa_id' => 4,
+            ],
+            [
+                'nombres' => 'Marco',
+                'apellidos' => 'Mamani',
+                'dni' => '78645124',
+                'licencia' => 'A-IIb',
+                'telefono' => '950987655',
+                'ruta_asignada' => 'Ruta 2 - Juliaca Centro',
+                'estado_licencia' => 'Activa',
+                'educacion_vial' => 'Aprobado',
+                'empresa_id' => 4,
+            ],
+            [
+                'nombres' => 'Edgar',
+                'apellidos' => 'Puma',
+                'dni' => '78645125',
+                'licencia' => 'A-I',
+                'telefono' => '950987656',
+                'ruta_asignada' => 'Ruta 3 - Plaza Lima',
+                'estado_licencia' => 'Pendiente',
+                'educacion_vial' => 'Pendiente',
+                'empresa_id' => 4,
+            ],
+            [
+                'nombres' => 'Victor',
+                'apellidos' => 'Coila',
+                'dni' => '78645126',
+                'licencia' => 'A-IIa',
+                'telefono' => '950987657',
+                'ruta_asignada' => 'Ruta 4 - Miraflores',
+                'estado_licencia' => 'Activa',
+                'educacion_vial' => 'Aprobado',
+                'empresa_id' => 4,
+            ],
+        ]);
+    }
+}

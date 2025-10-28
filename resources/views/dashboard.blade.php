@@ -105,68 +105,78 @@
             </div>
         </div>
 
+          <!-- rutas  -->
+        <div class="col-lg-5">
+            <div class="card card-dark card-outline elevation-3">
+    <div class="card-header border-0">
+        <h3 class="card-title"><i class="fas fa-map-marked-alt"></i> Empresas de Transporte - Según la empresa</h3>
+    </div>
 
-       <div class="col-lg-5">
-    <div class="card card-dark card-outline elevation-3">
-        <div class="card-header border-0">
-            <h3 class="card-title"><i class="fas fa-map-marked-alt"></i> Mapa de Rutas - Estilo Uber</h3>
+    <div class="card-body" style="background-color: #454D55; border-radius: 10px;">
+        <div class="text-center mb-4">
+            <h4 class="mb-1"><i class="fas fa-bus-alt"></i> Transporte Público Juliaca</h4>
+            <p class="text-muted mb-0">Empresas registradas en el sistema</p>
         </div>
-        <div class="card-body" style="background-color: #f7f7f7; border-radius: 10px;">
-            
-            <!-- Tarjeta Uber Style -->
-            <div class="uber-style-card mx-auto" style="max-width: 420px;">
-                <div class="card-header text-center"
-                    style="background: linear-gradient(135deg, #000 0%, #333 100%); color: #fff; border-radius: 10px 10px 0 0; padding: 20px;">
-                    <h4 class="mb-1"><i class="fas fa-bus-alt"></i> Mapa de Rutas Juliaca</h4>
-                    <p class="mb-0" style="opacity: 0.8;">12 rutas activas en toda la ciudad</p>
-                </div>
 
-                <div class="card-body p-4">
-                    <div class="input-group mb-3 position-relative">
-                        <i class="fas fa-map-marker-alt"
-                            style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #555;"></i>
-                        <input type="text" class="form-control" placeholder="Punto de partida"
-                            style="padding-left: 45px; border-radius: 8px; background-color: #f0f0f0; border: none;">
-                    </div>
-
-                    <div class="input-group mb-3 position-relative">
-                        <i class="fas fa-location-arrow"
-                            style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #555;"></i>
-                        <input type="text" class="form-control" placeholder="¿A dónde vas?"
-                            style="padding-left: 45px; border-radius: 8px; background-color: #f0f0f0; border: none;">
-                    </div>
-
-                    <button class="btn btn-dark btn-block" style="border-radius: 8px;">
-                        <i class="fas fa-route"></i> Ver precios de rutas
-                    </button>
-
-                    <div class="coverage-info mt-4 pt-3 border-top">
-                        <h5 class="text-center mb-3 text-dark">
-                            <i class="fas fa-map-marked-alt"></i> Cobertura Territorial
-                        </h5>
-                        <div class="d-flex justify-content-between text-center">
-                            <div class="p-2 bg-light rounded flex-fill mx-1">
-                                <h6 class="mb-1 text-dark">Norte</h6>
-                                <p class="mb-0 text-secondary small">4 rutas</p>
-                            </div>
-                            <div class="p-2 bg-light rounded flex-fill mx-1">
-                                <h6 class="mb-1 text-dark">Centro</h6>
-                                <p class="mb-0 text-secondary small">5 rutas</p>
-                            </div>
-                            <div class="p-2 bg-light rounded flex-fill mx-1">
-                                <h6 class="mb-1 text-dark">Sur</h6>
-                                <p class="mb-0 text-secondary small">3 rutas</p>
-                            </div>
-                        </div>
+        <div class="row">
+            <!-- Empresa Naranja -->
+            <div class="col-md-6 mb-3">
+                <div class="card shadow-sm border-0 h-100" 
+                     style="background: linear-gradient(135deg, #ff9800, #ffb81d); color: white; border-radius: 12px;">
+                    <div class="card-body text-center">
+                        <i class="fas fa-route fa-3x mb-2"></i>
+                        <h5 class="fw-bold mb-1">Empresa Naranja</h5>
+                        <p class="mb-1">Rutas: 12</p>
+                        <p class="mb-0 small opacity-75">Cobertura: Zona Norte</p>
                     </div>
                 </div>
             </div>
 
+            <!-- Empresa Línea 55 -->
+            <div class="col-md-6 mb-3">
+                <div class="card shadow-sm border-0 h-100" 
+                     style="background: linear-gradient(135deg, #66bb6a, #b2ff19); color: white; border-radius: 12px;">
+                    <div class="card-body text-center">
+                        <i class="fas fa-bus fa-3x mb-2"></i>
+                        <h5 class="fw-bold mb-1">Empresa Línea 55</h5>
+                        <p class="mb-1">Rutas: 8</p>
+                        <p class="mb-0 small opacity-75">Cobertura: Zona Este</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empresa Línea 22 -->
+            <div class="col-md-6 mb-3">
+                <div class="card shadow-sm border-0 h-100" 
+                     style="background: linear-gradient(135deg, #26a69a, #00bcd4); color: white; border-radius: 12px;">
+                    <div class="card-body text-center">
+                        <i class="fas fa-bus-alt fa-3x mb-2"></i>
+                        <h5 class="fw-bold mb-1">Empresa Línea 22</h5>
+                        <p class="mb-1">Rutas: 10</p>
+                        <p class="mb-0 small opacity-75">Cobertura: Zona Centro</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empresa Línea 18 -->
+            <div class="col-md-6 mb-3">
+                <div class="card shadow-sm border-0 h-100" 
+                     style="background: linear-gradient(135deg, #e53935, #ffebee); color: white; border-radius: 12px;">
+                    <div class="card-body text-center">
+                        <i class="fas fa-users fa-3x mb-2"></i>
+                        <h5 class="fw-bold mb-1">Empresa Línea 18</h5>
+                        <p class="mb-1">Rutas: 6</p>
+                        <p class="mb-0 small opacity-75">Cobertura: Zona Sur</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
         </div>
+
+    </div>
     </div>
 
     <!-- Tarjetas -->
@@ -308,96 +318,116 @@
 
 @section('js')
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-<script>
-    console.log("🚌 Cargando gráfico de Viajes Realizados (modo demo)");
+    <script>
+        console.log("🚌 Cargando gráfico de Viajes Realizados (modo demo)");
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const ctx = document.getElementById('salesChart');
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('salesChart');
 
-        if (ctx) {
-            // 🚀 Datos simulados (mientras no hay base de datos)
-            const dataDemo = [
-                { fecha: 'Lunes', viajes_realizados: 10 },
-                { fecha: 'Martes', viajes_realizados: 15 },
-                { fecha: 'Miércoles', viajes_realizados: 12 },
-                { fecha: 'Jueves', viajes_realizados: 20 },
-                { fecha: 'Viernes', viajes_realizados: 18 },
-                { fecha: 'Sábado', viajes_realizados: 25 },
-                { fecha: 'Domingo', viajes_realizados: 30 }
-            ];
-
-            const labels = dataDemo.map(item => item.fecha);
-            const valores = dataDemo.map(item => item.viajes_realizados);
-
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Viajes realizados por día',
-                        data: valores,
-                        fill: true,
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        borderColor: '#4fc3f7',
-                        borderWidth: 2,
-                        pointBackgroundColor: '#4fc3f7',
-                        tension: 0.35
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                color: '#fff',
-                                font: {
-                                    size: 13,
-                                    family: "'Poppins', sans-serif"
-                                }
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: '#222',
-                            titleColor: '#fff',
-                            bodyColor: '#fff'
-                        }
+            if (ctx) {
+                // 🚀 Datos simulados (mientras no hay base de datos)
+                const dataDemo = [{
+                        fecha: 'Lunes',
+                        viajes_realizados: 10
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Número de viajes',
-                                color: '#bbb'
+                    {
+                        fecha: 'Martes',
+                        viajes_realizados: 15
+                    },
+                    {
+                        fecha: 'Miércoles',
+                        viajes_realizados: 12
+                    },
+                    {
+                        fecha: 'Jueves',
+                        viajes_realizados: 20
+                    },
+                    {
+                        fecha: 'Viernes',
+                        viajes_realizados: 18
+                    },
+                    {
+                        fecha: 'Sábado',
+                        viajes_realizados: 25
+                    },
+                    {
+                        fecha: 'Domingo',
+                        viajes_realizados: 30
+                    }
+                ];
+
+                const labels = dataDemo.map(item => item.fecha);
+                const valores = dataDemo.map(item => item.viajes_realizados);
+
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Viajes realizados por día',
+                            data: valores,
+                            fill: true,
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: '#4fc3f7',
+                            borderWidth: 2,
+                            pointBackgroundColor: '#4fc3f7',
+                            tension: 0.35
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    color: '#fff',
+                                    font: {
+                                        size: 13,
+                                        family: "'Poppins', sans-serif"
+                                    }
+                                }
                             },
-                            ticks: {
-                                color: '#ccc'
-                            },
-                            grid: {
-                                color: 'rgba(255,255,255,0.05)'
+                            tooltip: {
+                                backgroundColor: '#222',
+                                titleColor: '#fff',
+                                bodyColor: '#fff'
                             }
                         },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Días de la semana',
-                                color: '#bbb'
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Número de viajes',
+                                    color: '#bbb'
+                                },
+                                ticks: {
+                                    color: '#ccc'
+                                },
+                                grid: {
+                                    color: 'rgba(255,255,255,0.05)'
+                                }
                             },
-                            ticks: {
-                                color: '#ccc'
-                            },
-                            grid: {
-                                display: false
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Días de la semana',
+                                    color: '#bbb'
+                                },
+                                ticks: {
+                                    color: '#ccc'
+                                },
+                                grid: {
+                                    display: false
+                                }
                             }
                         }
                     }
-                }
-            });
-        }
-    });
-</script>
+                });
+            }
+        });
+    </script>
 
 
 @stop

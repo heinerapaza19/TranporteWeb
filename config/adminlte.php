@@ -113,7 +113,7 @@ return [
         ],
         [
             'text' => 'Rutas de Transporte',
-            'url'  => 'admin/rutas',
+            'url'  => 'rutas',
             'icon' => 'fas fa-route',
         ],
         [
@@ -121,14 +121,37 @@ return [
             'url'  => 'vehiculo',
             'icon' => 'fas fa-car',
         ],
+    [
+        'text'    => 'Administrador',
+        'icon'    => 'fas fa-fw fa-users',
+        'submenu' => [
         [
-            'text' => 'Administrador',
-            'url' => 'admin',
-            'icon' => 'fas fa-fw fa-users',
+            'text' => 'Empresa San Román',
+            'url'  => 'empresa/login?empresa=sanroman',
+            'icon' => 'fas fa-bus text-info',
         ],
         [
+            'text' => 'Línea 18',
+            'url'  => 'empresa/login?empresa=linea18',
+            'icon' => 'fas fa-bus text-success',
+        ],
+        [
+            'text' => 'Línea 22',
+            'url'  => 'empresa/login?empresa=linea22',
+            'icon' => 'fas fa-bus text-primary',
+        ],
+        [
+            'text' => 'Línea 55',
+            'url'  => 'empresa/login?empresa=linea55',
+            'icon' => 'fas fa-bus text-warning',
+        ],
+    ],
+],
+
+
+        [
             'text' => 'Conductores',
-            'url'  => 'admin/pedidos',
+            'url'  => 'chofer',
             'icon' => 'fas fa-id-card', 
         ],
         [
