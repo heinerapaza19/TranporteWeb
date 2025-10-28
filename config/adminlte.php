@@ -118,12 +118,12 @@ return [
         ],
         [
             'text' => 'Vehículos',
-            'url'  => 'admin/clientes',
+            'url'  => 'vehiculo',
             'icon' => 'fas fa-car',
         ],
         [
             'text' => 'Administrador',
-            'url' => 'admin/administrador',
+            'url' => 'admin',
             'icon' => 'fas fa-fw fa-users',
         ],
         [
