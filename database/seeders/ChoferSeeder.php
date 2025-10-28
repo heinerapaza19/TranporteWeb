@@ -45,7 +45,7 @@ class ChoferSeeder extends Seeder
                 'empresa_id' => 1,
             ],
             [
-                'nombres' => 'Ruben',
+                'nombres' => 'Rubén',
                 'apellidos' => 'Puma',
                 'dni' => '45678915',
                 'licencia' => 'A-IIb',
@@ -115,7 +115,7 @@ class ChoferSeeder extends Seeder
                 'empresa_id' => 3,
             ],
             [
-                'nombres' => 'Raul',
+                'nombres' => 'Raúl',
                 'apellidos' => 'Choque',
                 'dni' => '65478933',
                 'licencia' => 'A-IIb',
@@ -126,7 +126,7 @@ class ChoferSeeder extends Seeder
                 'empresa_id' => 3,
             ],
             [
-                'nombres' => 'Oscar',
+                'nombres' => 'Óscar',
                 'apellidos' => 'Flores',
                 'dni' => '65478934',
                 'licencia' => 'A-I',
@@ -183,7 +183,7 @@ class ChoferSeeder extends Seeder
                 'empresa_id' => 4,
             ],
             [
-                'nombres' => 'Victor',
+                'nombres' => 'Víctor',
                 'apellidos' => 'Coila',
                 'dni' => '78645126',
                 'licencia' => 'A-IIa',

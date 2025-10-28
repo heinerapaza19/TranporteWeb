@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
             VehiculoSeeder::class,
 
             // 4️⃣ Finalmente los usuarios (admin, cliente, etc.)
-            UsuarioSeeder::class,
+            UsuarioSeeder::class, // ✅ corregido aquí
         ]);
     }
 }

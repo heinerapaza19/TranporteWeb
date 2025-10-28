@@ -117,10 +117,11 @@ return [
             'icon' => 'fas fa-route',
         ],
         [
-            'text' => 'Vehículos',
-            'url'  => 'vehiculo',
-            'icon' => 'fas fa-car',
-        ],
+    'text' => 'Vehículos',
+    'url'  => 'micro',
+    'icon' => 'fas fa-car',
+],
+
     [
         'text'    => 'Administrador',
         'icon'    => 'fas fa-fw fa-users',

@@ -34,4 +34,6 @@ class Chofer extends Model
     {
         return $this->hasMany(Vehiculo::class);
     }
+    protected $with = ['empresa'];
+
 }

@@ -50,15 +50,20 @@ class EmpresaAuthController extends Controller
 
     // Dashboard (solo si está logueada)
     public function dashboard()
-    {
-        if (!session()->has('empresa_id')) {
-            return redirect()->route('empresa.login');
-        }
-
-        $empresa = Empresa::with(['choferes', 'vehiculos'])->find(session('empresa_id'));
-
-        return view('empresa.dashboard', compact('empresa'));
+{
+    if (!session()->has('empresa_id')) {
+        return redirect()->route('empresa.login');
     }
+
+    // Cargar empresa con choferes y vehículos (cada vehículo con su chofer)
+    $empresa = Empresa::with([
+        'choferes',
+        'vehiculos.chofer'
+    ])->find(session('empresa_id'));
+
+    return view('empresa.dashboard', compact('empresa'));
+}
+
 
     // Cerrar sesión
     public function logout()

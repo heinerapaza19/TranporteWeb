@@ -12,16 +12,21 @@ class VehiculoController extends Controller
      * Mostrar todos los vehículos de una empresa
      */
     public function index()
-    {
-        $empresaId = session('empresa_id');
+{
+    $empresaId = session('empresa_id');
 
-        if (!$empresaId) {
-            return redirect()->route('empresa.login')->withErrors(['Debe iniciar sesión para acceder.']);
-        }
-
-        $empresa = Empresa::with('vehiculos.chofer')->findOrFail($empresaId);
-        return view('empresa.dashboard', compact('empresa'));
+    if (!$empresaId) {
+        return redirect()->route('empresa.login')->withErrors(['Debe iniciar sesión para acceder.']);
     }
+
+    // Trae los vehículos de la empresa junto con sus choferes
+    $vehiculos = Vehiculo::with('chofer')
+        ->where('empresa_id', $empresaId)
+        ->get();
+
+    return view('vehiculo.index', compact('vehiculos'));
+}
+
 
     /**
      * Guardar un nuevo vehículo
@@ -35,6 +40,7 @@ class VehiculoController extends Controller
             'capacidad' => 'nullable|integer',
             'soat' => 'nullable|string|max:20',
             'revision_tecnica' => 'nullable|string|max:20',
+            'chofer_id' => 'nullable|exists:choferes,id',
             'empresa_id' => 'required|exists:empresas,id',
         ]);
 
@@ -57,19 +63,20 @@ class VehiculoController extends Controller
             'capacidad' => 'nullable|integer',
             'soat' => 'nullable|string|max:20',
             'revision_tecnica' => 'nullable|string|max:20',
+            'chofer_id' => 'nullable|exists:choferes,id',
         ]);
 
         $vehiculo->update($request->all());
 
-        return back()->with('success', '✏️ Vehículo actualizado correctamente');
+        return back()->with('success', '✏ Vehículo actualizado correctamente');
     }
 
     /**
      * Eliminar vehículo
      */
     public function destroy($id)
-    {
-        Vehiculo::findOrFail($id)->delete();
-        return back()->with('success', '🗑️ Vehículo eliminado correctamente');
-    }
+{
+    Vehiculo::findOrFail($id)->delete();
+    return back()->with('success', '🚗 Vehículo eliminado correctamente');
+}
 }

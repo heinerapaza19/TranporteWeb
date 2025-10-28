@@ -20,19 +20,15 @@ class Empresa extends Model
         'password_login',
     ];
 
-    // Relaciones
+    // 🔹 Relación con choferes
     public function choferes()
     {
         return $this->hasMany(Chofer::class);
     }
 
+    // 🔹 Relación con vehículos
     public function vehiculos()
     {
         return $this->hasMany(Vehiculo::class);
-    }
-
-    public function rutas()
-    {
-        return $this->hasMany(Ruta::class);
     }
 }

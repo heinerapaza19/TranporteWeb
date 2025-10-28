@@ -29,4 +29,6 @@ class Vehiculo extends Model
     {
         return $this->belongsTo(Chofer::class);
     }
+    protected $with = ['empresa', 'chofer'];
+
 }
