@@ -214,7 +214,8 @@
                                                 </div>
                                             </div>
                                             <div class="mt-3 text-right">
-                                                <button class="btn btn-warning text-white">Actualizar</button>
+                                                <button type="submit"
+                                                    class="btn btn-warning text-white">Actualizar</button>
                                             </div>
                                         </form>
                                     </div>

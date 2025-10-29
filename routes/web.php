@@ -9,117 +9,113 @@ use App\Http\Controllers\ChoferController;
 use App\Http\Controllers\MicroController;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\RutaController;
+use App\Http\Controllers\ChoferAuthController;
+use App\Http\Controllers\ChatBotController;
 
 
-
-// ===============================
-// 🌐 PÁGINAS PÚBLICAS
-// ===============================
-
-// Página principal (puedes poner dashboard o portada pública)
-Route::get('/', function () {
-    return view('dashboard');
-});
-
-// Vista pública para pasajeros: solo consulta de vehículos
+/*
+|--------------------------------------------------------------------------
+| 🌐 RUTAS PÚBLICAS
+|--------------------------------------------------------------------------
+| Dashboard principal y vistas públicas (sin login)
+*/
+Route::get('/', fn() => view('dashboard'));
 Route::get('/vehiculo', [VehiculoController::class, 'index'])->name('vehiculo.index');
-
-// 👤 Panel general de usuario (si luego agregas login normal de usuarios)
 Route::get('/home', [HomeController::class, 'index'])->name('home');
-
-// ===============================
-// 🧩 PANEL DEL ADMINISTRADOR GENERAL
-// ===============================
 Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
 
-// ===============================
-// 🚀 LOGIN DE EMPRESAS
-// ===============================
-
-// Mostrar formulario de login de empresa
+/*
+|--------------------------------------------------------------------------
+| 🏢 LOGIN Y PANEL DE EMPRESAS
+|--------------------------------------------------------------------------
+| Cada empresa inicia sesión, gestiona sus choferes y vehículos.
+*/
 Route::get('/empresa/login', [EmpresaAuthController::class, 'showLogin'])->name('empresa.login');
-
-// Procesar login de empresa
 Route::post('/empresa/login', [EmpresaAuthController::class, 'login'])->name('empresa.login.post');
 
-// ===============================
-// 🔐 RUTAS PROTEGIDAS (solo empresa logueada)
-// ===============================
-Route::middleware('empresa.auth')->group(function () {
+/*
+|---------------------------------------------------------------------------
+| 🧱 RUTAS PROTEGIDAS (solo empresa autenticada)
+|---------------------------------------------------------------------------
+*/
+Route::middleware(['empresa.auth'])->group(function () {
+    Route::get('/empresa/dashboard', [EmpresaAuthController::class, 'dashboard'])->name('empresa.dashboard');
+    Route::get('/empresa/logout', [EmpresaAuthController::class, 'logout'])->name('empresa.logout');
 
-    // 📊 Panel privado de empresa
-    Route::get('/empresa/dashboard', [EmpresaAuthController::class, 'dashboard'])
-        ->name('empresa.dashboard');
+    Route::post('/chofer/store', [ChoferController::class, 'store'])->name('chofer.store');
+    Route::put('/chofer/{id}', [ChoferController::class, 'update'])->name('chofer.update');
+    Route::delete('/chofer/{id}', [ChoferController::class, 'destroy'])->name('chofer.destroy');
 
-    // 🚪 Cerrar sesión de empresa
-    Route::get('/empresa/logout', [EmpresaAuthController::class, 'logout'])
-        ->name('empresa.logout');
-
-    // ===============================
-    // 🧾 CRUD DE CHOFERES
-    // ===============================
-    Route::post('/chofer/store', [ChoferController::class, 'store'])
-        ->name('chofer.store');
-
-    Route::put('/chofer/{id}', [ChoferController::class, 'update'])
-        ->name('chofer.update');
-
-    Route::delete('/chofer/{id}', [ChoferController::class, 'destroy'])
-        ->name('chofer.destroy');
-
-    // ===============================
-    // 🚌 CRUD DE VEHÍCULOS (solo empresa)
-    // ===============================
-    Route::post('/vehiculo/store', [VehiculoController::class, 'store'])
-        ->name('vehiculo.store');
-
-    Route::put('/vehiculo/{id}', [VehiculoController::class, 'update'])
-        ->name('vehiculo.update');
-
-    Route::delete('/vehiculo/{id}', [VehiculoController::class, 'destroy'])
-        ->name('vehiculo.destroy');
+    Route::post('/vehiculo/store', [VehiculoController::class, 'store'])->name('vehiculo.store');
+    Route::put('/vehiculo/{id}', [VehiculoController::class, 'update'])->name('vehiculo.update');
+    Route::delete('/vehiculo/{id}', [VehiculoController::class, 'destroy'])->name('vehiculo.destroy');
 });
 
-//informaion 
+
+/*
+|--------------------------------------------------------------------------
+| 🚌 EMPRESAS Y RUTAS PÚBLICAS
+|--------------------------------------------------------------------------
+| Páginas visibles sin login (mapas por línea)
+*/
 Route::get('/empresa/naranja', [EmpresaController::class, 'naranja'])->name('empresa.naranja');
 Route::get('/empresa/18', [EmpresaController::class, 'linea18'])->name('empresa.18');
-Route::get('/empresa/55', [EmpresaController::class, 'linea55'])->name('empresa.55');
 Route::get('/empresa/22', [EmpresaController::class, 'linea22'])->name('empresa.22');
-
-//rutas de las empresas 
+Route::get('/empresa/55', [EmpresaController::class, 'linea55'])->name('empresa.55');
 Route::get('/rutas/mapa', [RutaController::class, 'mapa'])->name('rutas.mapa');
 
+/*
+|--------------------------------------------------------------------------
+| 👨‍✈️ LOGIN Y PANEL DE CHOFERES
+|--------------------------------------------------------------------------
+| Cada chofer tiene su propio acceso protegido por guard 'chofer'
+*/
+Route::get('/login', fn() => redirect()->route('chofer.login'))->name('login');
+Route::get('/chofer/login', [ChoferAuthController::class, 'showLoginForm'])->name('chofer.login');
+Route::post('/chofer/login', [ChoferAuthController::class, 'login'])->name('chofer.login.post');
+Route::post('/chofer/logout', [ChoferAuthController::class, 'logout'])->name('chofer.logout');
 
+/*
+|--------------------------------------------------------------------------
+| 🧱 RUTAS PROTEGIDAS (solo chofer autenticado)
+|--------------------------------------------------------------------------
+| Usan middleware auth:chofer (guard configurado en config/auth.php)
+*/
+Route::middleware('auth:chofer')->group(function () {
+    Route::get('/chofer/perfil', [ChoferController::class, 'perfil'])->name('chofer.perfil');
+    Route::get('/chofer/dashboard', [ChoferController::class, 'index'])->name('chofer.dashboard');
+});
 
-
-// ===============================
-// 🚐 MICROS (versión pública o admin)
-// ===============================
+/*
+|--------------------------------------------------------------------------
+| 🗺️ MAPAS Y MICROS
+|--------------------------------------------------------------------------
+| Vistas generales de rutas y micros
+*/
 Route::get('/micro', [MicroController::class, 'index'])->name('micro.index');
+Route::get('/mapa/18', fn() => view('mapas.linea18'))->name('mapa.linea18');
+Route::get('/mapa/naranja', fn() => view('mapas.naranja'))->name('mapa.naranja');
+Route::get('/mapa/22', fn() => view('mapas.linea22'))->name('mapa.22');
+Route::get('/mapa/55', fn() => view('mapas.linea55'))->name('mapa.55');
+
+//chat
+Route::post('/chatbot/responder', [ChatBotController::class, 'responder'])->name('chatbot.responder');
+
+use Illuminate\Support\Facades\Http;
+
+Route::get('/test-openai', function () {
+    $apiKey = env('OPENAI_API_KEY');
+    $response = Http::withHeaders([
+        'Authorization' => 'Bearer ' . $apiKey,
+        'Content-Type' => 'application/json',
+    ])->post('https://api.openai.com/v1/chat/completions', [
+        'model' => 'gpt-3.5-turbo',
+        'messages' => [
+            ['role' => 'user', 'content' => 'Di "Hola Juliaca" si esto funciona.']
+        ],
+    ]);
+
+    return $response->json();
+});
 
 
-// ===============================
-// 🗺️ MAPA DE RUTAS (público)
-// ===============================
-
-// 🟦 Vista específica para la Línea 18
-Route::get('/mapa/18', function () {
-    return view('mapas.linea18'); // resources/views/mapas/linea18.blade.php
-})->name('mapa.linea18');
-
-// 🟧 Vista específica para Empresa Naranja
-Route::get('/mapa/naranja', function () {
-    return view('mapas.naranja'); // resources/views/mapas/naranja.blade.php
-})->name('mapa.naranja');
-
-// 🟩 Vista específica para la Línea 22
-Route::get('/mapa/22', function () {
-    return view('mapas.linea22');
-})->name('mapa.22');
-
-// ===============================
-// 🟢 MAPA LÍNEA 55
-// ===============================
-Route::get('/mapa/55', function () {
-    return view('mapas.linea55');
-})->name('mapa.55');

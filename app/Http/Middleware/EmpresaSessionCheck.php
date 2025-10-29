@@ -5,14 +5,17 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class EmpresaAuth
+class EmpresaSessionCheck
 {
     public function handle(Request $request, Closure $next)
     {
         if (!session()->has('empresa_id')) {
-            session()->forget(['empresa_id', 'empresa_nombre', 'empresa_logo']);
             return redirect()->route('empresa.login')
-                ->withErrors(['error' => 'Debes iniciar sesión para acceder al panel.']);
+                ->withErrors(['error' => 'Debes iniciar sesión para continuar.']);
+        }
+
+        if ($request->route('id') && $request->route('id') != session('empresa_id')) {
+            abort(403, 'No puedes acceder al panel de otra empresa.');
         }
 
         return $next($request);

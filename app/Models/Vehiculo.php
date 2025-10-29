@@ -9,6 +9,8 @@ class Vehiculo extends Model
 {
     use HasFactory;
 
+    protected $table = 'vehiculos';
+
     protected $fillable = [
         'placa',
         'modelo',
@@ -17,18 +19,16 @@ class Vehiculo extends Model
         'revision_tecnica',
         'soat',
         'empresa_id',
-        'chofer_id'
+        'chofer_id', // importante
     ];
+
+    public function chofer()
+    {
+        return $this->belongsTo(Chofer::class, 'chofer_id');
+    }
 
     public function empresa()
     {
         return $this->belongsTo(Empresa::class);
     }
-
-    public function chofer()
-    {
-        return $this->belongsTo(Chofer::class);
-    }
-    protected $with = ['empresa', 'chofer'];
-
 }

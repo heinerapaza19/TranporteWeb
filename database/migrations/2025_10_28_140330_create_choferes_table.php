@@ -9,25 +9,24 @@ return new class extends Migration
     public function up(): void
 {
     Schema::create('choferes', function (Blueprint $table) {
-        $table->id();
-        $table->string('nombres', 100);
-        $table->string('apellidos', 100);
-        $table->string('dni', 10)->unique();
-        $table->string('licencia', 20)->nullable();
-        $table->string('telefono', 20)->nullable();
-        $table->string('ruta_asignada', 100)->nullable(); // Ej: "Ruta 1 - Central"
+    $table->id();
+    $table->string('nombres', 100);
+    $table->string('apellidos', 100);
+    $table->string('dni', 10)->unique();
+    $table->string('licencia', 20)->nullable();
+    $table->string('telefono', 20)->nullable();
 
-        // ✅ Acepta 3 valores para evitar errores
-        $table->enum('estado_licencia', ['Activa', 'Inactiva', 'Pendiente'])->default('Activa');
+    // 🔹 Agregamos columnas de autenticación
+    $table->string('email', 100)->unique()->nullable();
+    $table->string('password')->nullable();
 
-        $table->enum('educacion_vial', ['Aprobado', 'Pendiente', 'Reprobado'])->default('Pendiente');
+    $table->string('ruta_asignada', 100)->nullable();
+    $table->enum('estado_licencia', ['Activa', 'Inactiva', 'Pendiente'])->default('Activa');
+    $table->enum('educacion_vial', ['Aprobado', 'Pendiente', 'Reprobado'])->default('Pendiente');
+    $table->foreignId('empresa_id')->constrained('empresas')->onDelete('cascade');
+    $table->timestamps();
+});
 
-        $table->foreignId('empresa_id')
-              ->constrained('empresas')
-              ->onDelete('cascade');
-
-        $table->timestamps();
-    });
 }
 
 };
