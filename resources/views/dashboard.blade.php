@@ -83,24 +83,27 @@
     </div>
 
     {{-- ==== GRÁFICO Y MAPAS ==== --}}
+    {{-- ==== GRÁFICO Y MAPAS ==== --}}
     <div class="row mt-4">
+        <!-- 📊 Gráfico de viajes (IZQUIERDA) -->
         <div class="col-lg-7">
             <div class="card card-info card-outline elevation-3">
                 <div class="card-header border-0 d-flex justify-content-between align-items-center">
                     <h3 class="card-title mb-0">
-                        <i class="fas fa-route"></i> Viajes Realizados por Día
+                        <i class="fas fa-route"></i> Mapa General de Rutas
                     </h3>
                     <button class="btn btn-tool btn-sm"><i class="fas fa-bars"></i></button>
                 </div>
-                <div class="card-body">
-                    <canvas id="salesChart" height="250"></canvas>
+
+                <div class="card-body p-0">
+                    <div id="map" style="height: 400px;"></div>
                 </div>
+
                 <div class="card-footer text-center text-muted small">
-                    <i class="fas fa-info-circle"></i> Datos basados en viajes completados.
+                    <i class="fas fa-info-circle"></i> Mapa combinado de todas las rutas activas
                 </div>
             </div>
         </div>
-
         <div class="col-lg-5">
             <div class="card card-outline elevation-3 bg-white text-dark border-0">
                 <div class="card-header border-0 bg-white">
@@ -185,272 +188,457 @@
         </div>
     </div>
 
-    {{-- ==== TARJETAS DE SERVICIOS ==== --}}
-    <di class="row mt-4">
-        <div class="col-lg-3 col-md-6 col-12 mb-4">
-            <div class="card card-widget widget-user elevation-4">
-                <div class="widget-user-header"
-                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); height: 140px;">
-                    <div class="text-center pt-3"><i class="fas fa-route fa-4x text-white opacity-75"></i></div>
-                </div>
-                <div class="card-footer text-center">
-                    <h5 class="text-primary font-weight-bold mb-2">Ver Rutas</h5>
-                    <p class="text-muted mb-3">Explora todas las rutas disponibles</p>
-                    <a href="#" class="btn btn-primary btn-sm px-4 rounded-pill"><i class="fas fa-search"></i>
-                        Consultar</a>
-                </div>
-            </div>
+    
+
+    <!-- 💬 BOTÓN FLOTANTE -->
+    <button id="chatbotButton">
+        <i class="fas fa-robot"></i>
+    </button>
+
+    <!-- 🪟 CHAT FLOTANTE -->
+    <div id="chatContainer">
+        <div id="chatHeader">
+            <span>Asistente Virtual</span>
+            <button id="closeChat">✕</button>
         </div>
 
-        <div class="col-lg-3 col-md-6 col-12 mb-4">
-            <div class="card card-widget widget-user elevation-4">
-                <div class="widget-user-header bg-gradient-success" style="height: 140px;">
-                    <div class="text-center pt-3"><i class="fas fa-clock fa-4x text-white opacity-75"></i></div>
-                </div>
-                <div class="card-footer text-center">
-                    <h5 class="text-success font-weight-bold mb-2">Horarios</h5>
-                    <p class="text-muted mb-3">Revisa horarios de salida y llegada</p>
-                    <a href="#" class="btn btn-success btn-sm px-4 rounded-pill"><i
-                            class="fas fa-calendar-alt"></i> Ver Horarios</a>
-                </div>
-            </div>
+        <div id="chatBody">
+            <p><strong>🤖 Bot:</strong> ¡Hola! Soy tu asistente del transporte. ¿En qué puedo ayudarte?</p>
         </div>
 
-        <div class="col-lg-3 col-md-6 col-12 mb-4">
-            <div class="card card-widget widget-user elevation-4">
-                <div class="widget-user-header"
-                    style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); height: 140px;">
-                    <div class="text-center pt-3"><i class="fas fa-ticket-alt fa-4x text-white opacity-75"></i></div>
-                </div>
-                <div class="card-footer text-center">
-                    <h5 class="text-info font-weight-bold mb-2">Ubicación en Vivo</h5>
-                    <p class="text-muted mb-3">Rastrea tu transporte en tiempo real</p>
-                    <a href="#" class="btn btn-info btn-sm px-4 rounded-pill"><i class="fas fa-map-marked-alt"></i>
-                        Ver Ubicación</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6 col-12 mb-4">
-    <div class="card card-widget widget-user elevation-4">
-        <div class="widget-user-header"
-            style="background: linear-gradient(135deg, #ffb300 0%, #ff9800 100%); height: 140px;">
-            <div class="text-center pt-3">
-                <i class="fas fa-comments fa-4x text-white opacity-75"></i>
-            </div>
-        </div>
-        <div class="card-footer text-center">
-            <h5 class="text-warning font-weight-bold mb-2">Chat Bot</h5>
-            <p class="text-muted mb-3">Asistente virtual del transporte</p>
-            <button class="btn btn-warning btn-sm px-4 rounded-pill text-white" data-toggle="modal" data-target="#chatBotModal">
-                <i class="fas fa-robot"></i> Iniciar Chat
-            </button>
+        <div id="chatFooter">
+            <input type="text" id="chatInput" placeholder="Escribe tu mensaje...">
+            <button id="sendBtn"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
-</div>
-
-</div>
 
 
 
-<!-- 🔹 Modal ChatBot -->
-<div class="modal fade" id="chatBotModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content shadow-lg" style="border-radius: 15px;">
-      <div class="modal-header bg-gradient-warning text-white">
-        <h5 class="modal-title"><i class="fas fa-robot"></i> Asistente Virtual</h5>
-        <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body" style="max-height:400px; overflow-y:auto;" id="chatbotMessages">
-        <div class="text-muted"><em>👋 ¡Hola! Soy tu asistente del transporte. Pregúntame lo que quieras.</em></div>
-      </div>
-      <div class="modal-footer p-2">
-        <input type="text" id="chatbotInput" class="form-control" placeholder="Escribe tu pregunta...">
-        <button id="chatbotSend" class="btn btn-dark"><i class="fas fa-paper-plane"></i></button>
-      </div>
+    <!-- 🔹 Modal ChatBot -->
+    <div class="modal fade" id="chatBotModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow-lg" style="border-radius: 15px;">
+                <div class="modal-header bg-gradient-warning text-white">
+                    <h5 class="modal-title"><i class="fas fa-robot"></i> Asistente Virtual</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body" style="max-height:400px; overflow-y:auto;" id="chatbotMessages">
+                    <div class="text-muted"><em>👋 ¡Hola! Soy tu asistente del transporte. Pregúntame lo que
+                            quieras.</em></div>
+                </div>
+                <div class="modal-footer p-2">
+                    <input type="text" id="chatbotInput" class="form-control" placeholder="Escribe tu pregunta...">
+                    <button id="chatbotSend" class="btn btn-dark"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
+
+    {{-- ==== SCRIPT DEL MAPA ==== --}}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+
 
 @stop
 
 {{-- 🔹 Scripts del ChatBot --}}
 @section('js')
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const sendBtn = document.getElementById('chatbotSend');
-    const input = document.getElementById('chatbotInput');
-    const messages = document.getElementById('chatbotMessages');
+    <script>
 
-    function addMessage(who, text, color = 'black') {
-        const msg = document.createElement('div');
-        msg.classList.add('mt-2');
-        msg.innerHTML = `<strong style="color:${color}">${who}:</strong> ${text}`;
-        messages.appendChild(msg);
-        messages.scrollTop = messages.scrollHeight;
-    }
+     // 🗺️ Inicializar mapa en Juliaca
+    var map = L.map('map').setView([-15.49, -70.13], 13);
 
-    async function sendMessage() {
-        const text = input.value.trim();
-        if (!text) return;
-        addMessage('Tú', text, '#007bff');
-        input.value = '';
+    // 🌎 Capa satélite tipo Google Maps
+    L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0','mt1','mt2','mt3'],
+        attribution: '© Google Maps'
+    }).addTo(map);
 
-        const response = await fetch('{{ route('chatbot.responder') }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({ mensaje: text })
+    // === 🟧 EMPRESA NARANJA ===
+    var coordsNaranja = [
+        [-15.514141, -70.178590],
+        [-15.4939, -70.1164],
+        [-15.439137, -70.099006]
+    ];
+    var rutaNaranja = L.polyline(coordsNaranja, { color: '#ff9800', weight: 4 }).addTo(map);
+
+    // === 🔷 LÍNEA 18 ===
+    var coords18 = [
+        [-15.513593, -70.175983],
+        [-15.493967, -70.130782],
+        [-15.477323, -70.099389]
+    ];
+    var ruta18 = L.polyline(coords18, { color: '#3949ab', weight: 4 }).addTo(map);
+
+    // === 🔵 LÍNEA 22 ===
+    var coords22 = [
+        [-15.533118, -70.185676],
+        [-15.473214, -70.124072],
+        [-15.457271, -70.126224]
+    ];
+    var ruta22 = L.polyline(coords22, { color: '#1E88E5', weight: 4 }).addTo(map);
+
+    // === 🟢 LÍNEA 55 ===
+    var coords55 = [
+        [-15.533141, -70.185658],
+        [-15.463085, -70.138861],
+        [-15.411148, -70.149495]
+    ];
+    var ruta55 = L.polyline(coords55, { color: '#4CAF50', weight: 4 }).addTo(map);
+
+    // 🔍 Ajustar vista para ver todas las rutas
+    var group = L.featureGroup([rutaNaranja, ruta18, ruta22, ruta55]);
+    map.fitBounds(group.getBounds());
+
+    // 🧭 Leyenda
+    var legend = L.control({position: 'bottomright'});
+    legend.onAdd = function () {
+        var div = L.DomUtil.create('div', 'info legend');
+        div.style.background = 'white';
+        div.style.padding = '10px';
+        div.style.borderRadius = '8px';
+        div.style.fontSize = '13px';
+        div.innerHTML = `
+            <b>🚌 Rutas Activas</b><br>
+            <span style="color:#ff9800;">⬤</span> Empresa Naranja<br>
+            <span style="color:#3949ab;">⬤</span> Línea 18<br>
+            <span style="color:#1E88E5;">⬤</span> Línea 22<br>
+            <span style="color:#4CAF50;">⬤</span> Línea 55
+        `;
+        return div;
+    };
+    legend.addTo(map);
+        document.addEventListener('DOMContentLoaded', () => {
+            const sendBtn = document.getElementById('chatbotSend');
+            const input = document.getElementById('chatbotInput');
+            const messages = document.getElementById('chatbotMessages');
+
+            function addMessage(who, text, color = 'black') {
+                const msg = document.createElement('div');
+                msg.classList.add('mt-2');
+                msg.innerHTML = `<strong style="color:${color}">${who}:</strong> ${text}`;
+                messages.appendChild(msg);
+                messages.scrollTop = messages.scrollHeight;
+            }
+
+            async function sendMessage() {
+                const text = input.value.trim();
+                if (!text) return;
+                addMessage('Tú', text, '#007bff');
+                input.value = '';
+
+                const response = await fetch('{{ route('chatbot.store') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        mensaje: text
+                    })
+                });
+
+                const data = await response.json();
+                addMessage('Bot 🤖', data.respuesta, '#28a745');
+            }
+
+            sendBtn.addEventListener('click', sendMessage);
+            input.addEventListener('keypress', e => {
+                if (e.key === 'Enter') sendMessage();
+            });
         });
 
-        const data = await response.json();
-        addMessage('Bot 🤖', data.respuesta, '#28a745');
-    }
+        const chatButton = document.getElementById('chatbotButton');
+        const chatContainer = document.getElementById('chatContainer');
+        const closeChat = document.getElementById('closeChat');
 
-    sendBtn.addEventListener('click', sendMessage);
-    input.addEventListener('keypress', e => {
-        if (e.key === 'Enter') sendMessage();
-    });
-});
-</script>
+        chatButton.addEventListener('click', () => {
+            chatContainer.style.display = 'flex';
+            chatButton.style.display = 'none';
+        });
+
+        closeChat.addEventListener('click', () => {
+            chatContainer.style.display = 'none';
+            chatButton.style.display = 'flex';
+        });
+
+        document.getElementById('sendBtn').addEventListener('click', () => {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (message) {
+                const chatBody = document.getElementById('chatBody');
+                chatBody.innerHTML += `<p><strong>Tú:</strong> ${message}</p>`;
+                input.value = '';
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+        });
+    </script>
 @stop
 
 {{-- ==== CSS Y FOOTER FINAL ==== --}}
 @section('css')
-<style>
-    /* ==== ARREGLO DE CABECERAS DE TARJETAS ==== */
-    .card-header {
-        background-color: #454D55 !important;
-        color: #fff !important;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
+    <style>
+        /* ==== ARREGLO DE CABECERAS DE TARJETAS ==== */
+        .card-header {
+            background-color: #454D55 !important;
+            color: #fff !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
-    /* Para las tarjetas “card-outline” blancas */
-    .card-outline {
-        background-color: #454D55 !important;
-        color: #fff !important;
-    }
+        /* Para las tarjetas “card-outline” blancas */
+        .card-outline {
+            background-color: #454D55 !important;
+            color: #fff !important;
+        }
 
-    .card-title,
-    .card-title i {
-        color: #fff !important;
-    }
+        .card-title,
+        .card-title i {
+            color: #fff !important;
+        }
 
-    .content-wrapper,
-    .main-footer,
-    .main-header {
-        background-color: #454D55 !important;
-    }
+        .content-wrapper,
+        .main-footer,
+        .main-header {
+            background-color: #454D55 !important;
+        }
 
-    .card {
-        background-color: #50575f !important;
-        border: none !important;
-    }
+        .card {
+            background-color: #50575f !important;
+            border: none !important;
+        }
 
-    .footer-uber {
-        background-color: #454D55;
-        color: #fff;
-        width: 100%;
-        padding: 3rem 0 1.5rem;
-        font-family: 'Poppins', sans-serif;
-        margin-top: 3rem;
-    }
+        .footer-uber {
+            background-color: #454D55;
+            color: #fff;
+            width: 100%;
+            padding: 3rem 0 1.5rem;
+            font-family: 'Poppins', sans-serif;
+            margin-top: 3rem;
+        }
 
-    .footer-uber a {
-        color: rgba(255, 255, 255, 0.8);
-        text-decoration: none;
-        transition: 0.3s;
-    }
+        .footer-uber a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: 0.3s;
+        }
 
-    .footer-uber a:hover {
-        color: #1db954;
-    }
+        .footer-uber a:hover {
+            color: #1db954;
+        }
 
-    .footer-uber h4 {
-        font-weight: 700;
-        text-transform: uppercase;
-    }
+        .footer-uber h4 {
+            font-weight: 700;
+            text-transform: uppercase;
+        }
 
-    .footer-uber .social-icon {
-        font-size: 2.5rem;
-        margin: 0 15px;
-        color: #1db954;
-        transition: all 0.3s ease;
-        filter: drop-shadow(0 0 5px rgba(29, 185, 84, 0.4));
-    }
+        .footer-uber .social-icon {
+            font-size: 2.5rem;
+            margin: 0 15px;
+            color: #1db954;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 0 5px rgba(29, 185, 84, 0.4));
+        }
 
-    .footer-uber .social-icon:hover {
-        transform: scale(1.2);
-        text-shadow: 0 0 10px #1db954;
-    }
+        .footer-uber .social-icon:hover {
+            transform: scale(1.2);
+            text-shadow: 0 0 10px #1db954;
+        }
 
-    .footer-uber hr {
-        border-top: 1px solid rgba(255, 255, 255, 0.15);
-        width: 85%;
-        margin: 2rem auto 1rem;
-    }
+        .footer-uber hr {
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            width: 85%;
+            margin: 2rem auto 1rem;
+        }
 
-    .footer-uber .copyright {
-        color: rgba(255, 255, 255, 0.7);
-        text-align: center;
-        font-size: 0.9rem;
-    }
-</style>
+        .footer-uber .copyright {
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        /* --- BOTÓN FLOTANTE --- */
+        #chatbotButton {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #ffb300 0%, #ff9800 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        #chatbotButton:hover {
+            transform: scale(1.1);
+            background: linear-gradient(135deg, #ffa000 0%, #ff6f00 100%);
+        }
+
+        /* --- CONTENEDOR DEL CHAT --- */
+        #chatContainer {
+            position: fixed;
+            bottom: 110px;
+            right: 30px;
+            width: 380px;
+            height: 520px;
+            background: #2B3D4F;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1001;
+        }
+
+        /* --- CABECERA DEL CHAT --- */
+        #chatHeader {
+            background: linear-gradient(135deg, #ff9800 0%, #ff6f00 100%);
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #chatHeader button {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* --- MENSAJES --- */
+        #chatBody {
+            flex: 1;
+            background: #344A63;
+            color: #fff;
+            padding: 15px;
+            overflow-y: auto;
+            font-size: 14px;
+        }
+
+        /* --- INPUT --- */
+        #chatFooter {
+            display: flex;
+            padding: 10px;
+            background: #2B3D4F;
+        }
+
+        #chatInput {
+            flex: 1;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 15px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        #sendBtn {
+            background: #ff9800;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-left: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+
+        #sendBtn:hover {
+            background: #ff6f00;
+            transform: scale(1.1);
+        }
+
+        #chatContainer {
+            position: fixed;
+            bottom: 110px;
+            right: 30px;
+            width: 380px;
+            height: 420px;
+            background: #2B3D4F;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1001;
+        }
+
+        #chatHeader {
+            background: linear-gradient(135deg, #ff9800 0%, #ff6f00 100%);
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #chatHeader button {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        #chatHeader button:hover {
+            color: #ffd180;
+        }
+
+        #chatBody {
+            background: #344A63;
+            color: #E0E0E0;
+        }
+    </style>
 @stop
 
 @section('footer')
-<footer class="footer-uber">
-    <div class="container">
-        <div class="row text-white">
-            <div class="col-md-3 mb-4">
-                <h4>Transporte Juliaca</h4>
-                <p>Visita el centro de ayuda o consulta nuestras rutas disponibles.</p>
-                <a href="#">Centro de Ayuda</a>
-            </div>
-            <div class="col-md-3 mb-4">
-                <h4>Compañía</h4>
-                <ul class="list-unstyled">
-                    <li><a href="#">Quiénes somos</a></li>
-                    <li><a href="#">Servicios</a></li>
-                    <li><a href="#">Noticias</a></li>
-                    <li><a href="#">Inversiones</a></li>
-                    <li><a href="#">Blog</a></li>
-                </ul>
-            </div>
-            <div class="col-md-3 mb-4">
-                <h4>Productos</h4>
-                <ul class="list-unstyled">
-                    <li><a href="#">Viaja</a></li>
-                    <li><a href="#">Conduce</a></li>
-                    <li><a href="#">Comida</a></li>
-                    <li><a href="#">Empresas</a></li>
-                    <li><a href="#">Tarjetas de recarga</a></li>
-                </ul>
-            </div>
-            <div class="col-md-3 mb-4">
-                <h4>Ciudades</h4>
-                <ul class="list-unstyled">
-                    <li><a href="#">Reserva</a></li>
-                    <li><a href="#">Terminales</a></li>
-                    <li><a href="#">Zonas</a></li>
-                    <li><a href="#">Aeropuertos</a></li>
-                </ul>
-            </div>
+    <footer class="bg-dark text-white py-4">
+    <div class="container text-center">
+        <h4>Transporte Público Juliaca</h4>
+        <p>
+            Nos dedicamos a mejorar el transporte urbano de Juliaca con rutas seguras,
+            conductores capacitados y un servicio eficiente para todos los ciudadanos.
+        </p>
+
+        <div class="mt-3">
+            <a href="https://www.facebook.com/RuterosRegionPuno/" target="_blank" class="social-icon mx-2 text-white">
+                <i class="fab fa-facebook-f fa-lg"></i>
+            </a>
+            <a href="https://www.instagram.com/reel/DOdtwj8DS0B/" target="_blank" class="social-icon mx-2 text-white">
+                <i class="fab fa-instagram fa-lg"></i>
+            </a>
+            <a href="https://wa.me/51949123456" target="_blank" class="social-icon mx-2 text-white">
+                <i class="fab fa-whatsapp fa-lg"></i>
+            </a>
         </div>
 
-        <div class="text-center mt-4">
-            <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-            <a href="#" class="social-icon"><i class="fab fa-whatsapp"></i></a>
-        </div>
+        <hr class="bg-light">
 
-        <hr>
-
-        <div class="copyright">
+        <p class="mb-0">
             © 2025 <strong>Transporte Público Juliaca</strong> — Desarrollado por <strong>Heiner Apaza</strong>.
-        </div>
+        </p>
     </div>
 </footer>
+
 @stop

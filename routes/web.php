@@ -98,7 +98,15 @@ Route::get('/mapa/naranja', fn() => view('mapas.naranja'))->name('mapa.naranja')
 Route::get('/mapa/22', fn() => view('mapas.linea22'))->name('mapa.22');
 Route::get('/mapa/55', fn() => view('mapas.linea55'))->name('mapa.55');
 
-//chat
+// 🤖 Chatbot
+Route::get('/chatbot', [ChatbotController::class, 'index'])->name('chatbot.index');
+Route::post('/chatbot/store', [ChatbotController::class, 'store'])->name('chatbot.store');
+Route::get('/chatbot/historial', [ChatbotController::class, 'historial'])->name('chatbot.historial');
+
+
+Route::view('/mapa-general', 'mapas.mapa_general')->name('mapa.general');
+
+/*
 Route::post('/chatbot/responder', [ChatBotController::class, 'responder'])->name('chatbot.responder');
 
 use Illuminate\Support\Facades\Http;
@@ -116,6 +124,6 @@ Route::get('/test-openai', function () {
     ]);
 
     return $response->json();
-});
+});*/
 
 

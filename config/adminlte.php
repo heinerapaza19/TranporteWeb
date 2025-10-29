@@ -111,11 +111,7 @@ return [
             'url' => '/',
             'icon' => 'fas fa-fw fa-home',
         ],
-        [
-            'text' => 'Mapa General de Rutas',
-            'url'  => 'rutas/mapa',
-            'icon' => 'fas fa-map-marked-alt',
-        ],
+        
 
         [
     'text' => 'Vehículos',
@@ -151,38 +147,8 @@ return [
 ],
 
 
-        [
-            'text' => 'Conductores',
-            'url'  => 'chofer',
-            'icon' => 'fas fa-id-card', 
-        ],
-        [
-            'text' => 'Reportes',
-            'url' => 'admin/reportes',
-            'icon' => 'fas fa-fw fa-chart-bar',
-        ],
-        ['header' => 'CUENTA DE USUARIO'],
-        [
-            'text' => 'Perfil',
-            'url' => 'admin/perfil',
-            'icon' => 'fas fa-fw fa-user',
-        ],
-        [
-            'text' => 'Cambiar contraseña',
-            'url' => 'admin/password',
-            'icon' => 'fas fa-fw fa-lock',
-        ],
-        ['header' => 'SISTEMA'],
-        [
-            'text' => 'Configuración',
-            'icon_color' => 'cyan',
-            'url' => 'admin/configuracion',
-        ],
-        [
-            'text' => 'Cerrar sesión',
-            'url' => 'logout',
-            'icon' => 'fas fa-fw fa-sign-out-alt',
-        ],
+    
+        
     ],
 
     'filters' => [

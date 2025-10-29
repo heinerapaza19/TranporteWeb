@@ -3,237 +3,226 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
+use App\Models\ChatbotMensaje;
+use App\Models\Usuario;
 
-class ChatBotController extends Controller
+class ChatbotController extends Controller
 {
-    private $rutas = [
-        'linea_16' => [
-            'nombre' => 'Línea 16',
-            'emoji' => '🟣',
-            'ruta' => 'Salida Cusco → Av. Circunvalación → Av. Tacna → Óvalo San Martín → Terminal Terrestre → Jr. San Martín → Centro Comercial → Jr. Mariano Núñez → Óvalo Salida Cusco → Puente Maravillas → Salida Cusco → Cementerio Chile → San Martín → Colegio JAE → Jr. Maestro → Jr. Cahuide → Triángulo Salida Cusco → Av. Ferrocarril → Óvalo Parque Cholo → Salida Lampa',
-            'lugares_clave' => ['terminal terrestre', 'san martin', 'centro comercial', 'parque cholo', 'salida cusco', 'salida lampa', 'cementerio', 'jae', 'mariano nunez', 'puente maravillas']
-        ],
-        'linea_15' => [
-            'nombre' => 'Línea 15',
-            'emoji' => '🟡',
-            'ruta' => 'SENATI → Salida Puno → Mercado Cerro Colorado → Av. Tacna → Circunvalación → Túpac Amaru → Salida Huancané',
-            'lugares_clave' => ['senati', 'cerro colorado', 'mercado', 'tupac amaru', 'salida huancane', 'salida puno']
-        ],
-        'linea_18' => [
-            'nombre' => 'Línea 18',
-            'emoji' => '🟠',
-            'ruta' => 'Av. Tacna → Circunvalación → Tambopata → UPeU Juliaca',
-            'lugares_clave' => ['upeu', 'universidad', 'tambopata']
-        ],
-        'linea_22' => [
-            'nombre' => 'Línea 22',
-            'emoji' => '🔵',
-            'ruta' => 'Plaza Bolognesi → Jr. Moquegua → Aeropuerto Inca Manco Cápac',
-            'lugares_clave' => ['aeropuerto', 'bolognesi', 'plaza bolognesi', 'moquegua']
-        ],
-        'linea_55' => [
-            'nombre' => 'Línea 55',
-            'emoji' => '🔴',
-            'ruta' => 'Av. San Martín → Terminal Las Mercedes → Salida Arequipa',
-            'lugares_clave' => ['terminal mercedes', 'mercedes', 'salida arequipa']
-        ],
-        'linea_60' => [
-            'nombre' => 'Línea 60',
-            'emoji' => '🟤',
-            'ruta' => 'Salida Huancané → Circunvalación → Av. Tacna → Óvalo San Martín → Parque Cholo → Av. Ferrocarril → Salida Lampa',
-            'lugares_clave' => ['parque cholo', 'ferrocarril', 'salida lampa', 'salida huancane']
-        ],
-        'micro_1' => [
-            'nombre' => 'Micro 1',
-            'emoji' => '⚪',
-            'ruta' => 'Rinconada → Parque Grau → Piscina Municipal → Centro Comercial → Plaza Vea → Jr. San Martín → Terminal Terrestre → Av. San Martín',
-            'lugares_clave' => ['rinconada', 'parque grau', 'piscina', 'piscina municipal', 'centro comercial', 'plaza vea', 'terminal terrestre', 'san martin']
-        ]
-    ];
-
-    public function inicio()
+    /**
+     * Mostrar la vista del chatbot
+     */
+    public function index()
     {
+        return view('chatbot.index');
+    }
+
+    /**
+     * Guardar un mensaje del chatbot y obtener respuesta de IA
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'pregunta' => 'required|string|max:1000',
+        ]);
+
+        $pregunta = $request->pregunta;
+
+        // Respuesta de IA
+        $respuesta = $this->getAIResponse($pregunta);
+
+        // Guardar en base de datos
+        $mensaje = ChatbotMensaje::create([
+            'usuario_id' => null,
+            'pregunta' => $pregunta,
+            'respuesta' => $respuesta,
+            'fecha_hora' => now(),
+        ]);
+
         return response()->json([
-            'respuesta' => "👋 ¡Hola! Soy tu asistente del transporte. Pregúntame lo que quieras."
+            'success' => true,
+            'mensaje' => $mensaje
         ]);
     }
 
-    public function responder(Request $request)
+    /**
+     * Obtener el historial de mensajes
+     */
+    public function historial()
     {
-        try {
-            $mensaje = $request->input('mensaje', '');
-            
-            if (empty($mensaje)) {
-                return response()->json([
-                    'respuesta' => "🤔 No recibí ningún mensaje. Escríbeme algo."
-                ]);
-            }
-
-            $mensajeOriginal = $mensaje;
-            $mensaje = strtolower(trim($mensaje));
-            $mensaje = $this->normalizarTexto($mensaje);
-
-            Log::info("Mensaje recibido: " . $mensaje);
-
-            // 🧭 Si el usuario dice "para la upeu" o "quiero ir al aeropuerto"
-            if (preg_match('/\b(quiero ir a|voy a|para ir a|para la|como llego a|ir a)\b/', $mensaje)) {
-                $mensaje = preg_replace('/\b(quiero ir a|voy a|para ir a|para la|como llego a|ir a)\b/', '', $mensaje);
-                $mensaje = trim($mensaje);
-            }
-
-            // 🔹 Respuesta local
-            $respuestaLocal = $this->respuestaLocal($mensaje);
-            if (!str_contains($respuestaLocal, 'No entendí')) {
-                return response()->json(['respuesta' => $respuestaLocal]);
-            }
-
-            // 🔹 API backup (solo si falla local)
-            $apiKey = env('OPENROUTER_API_KEY');
-            if (!empty($apiKey)) {
-                try {
-                    $respuestaAPI = $this->consultarAPI($mensajeOriginal, $apiKey);
-                    if ($respuestaAPI) {
-                        return response()->json(['respuesta' => $respuestaAPI]);
-                    }
-                } catch (\Exception $e) {
-                    Log::warning("Error API: " . $e->getMessage());
-                }
-            }
-
-            return response()->json(['respuesta' => $respuestaLocal]);
-
-        } catch (\Exception $e) {
-            Log::error("Error en responder: " . $e->getMessage());
-            return response()->json([
-                'respuesta' => "❌ Ocurrió un error, intenta de nuevo."
-            ], 200);
-        }
+        $mensajes = ChatbotMensaje::orderBy('fecha_hora', 'asc')->limit(50)->get();
+        return response()->json($mensajes);
     }
 
-    private function buscarRuta($mensaje)
+    /**
+     * Obtener respuesta de IA (puede usar OpenAI o respuestas predefinidas)
+     */
+    private function getAIResponse($pregunta)
     {
-        $lineasEncontradas = [];
+        $preguntaLower = strtolower($pregunta);
 
-        foreach ($this->rutas as $ruta) {
-            foreach ($ruta['lugares_clave'] as $lugar) {
-                if (str_contains($mensaje, $lugar)) {
-                    $lineasEncontradas[] = $ruta;
-                    break;
+        // Intentar usar OpenAI si está configurado
+        $openaiKey = env('OPENAI_API_KEY');
+        if ($openaiKey && strlen($openaiKey) > 0) {
+            try {
+                $response = $this->getOpenAIResponse($pregunta);
+                if ($response) {
+                    return $response;
                 }
+            } catch (\Exception $e) {
+                // Si falla OpenAI, usar respuestas predefinidas
             }
         }
 
-        return $lineasEncontradas;
+        // Usar respuestas inteligentes predefinidas con tono conversacional
+
+        // Respuestas contextuales más naturales y conversacionales
+        if (str_contains($preguntaLower, 'horario') || str_contains($preguntaLower, 'hora')) {
+            return "Claro, te puedo ayudar con los horarios. En Juliaca, el transporte público opera con diferentes horarios según la empresa. " .
+                   "San Román funciona de 5 de la mañana hasta las 11 de la noche, Línea 18 de 5:30 AM a 10:30 PM, " .
+                   "Línea 22 de 6 AM a 10 PM, y Línea 55 también de 5 AM a 11 PM. " .
+                   "Generalmente los buses pasan cada 10 a 15 minutos durante las horas pico, así que no deberías esperar mucho.";
+        }
+
+        if (str_contains($preguntaLower, 'ruta') || str_contains($preguntaLower, 'recorrido')) {
+            return "En la ciudad tenemos cuatro empresas de transporte público activas. " .
+                   "San Román que es la naranja cubre principalmente la zona norte, Línea 18 en verde atiende la zona este, " .
+                   "Línea 22 en azul maneja el centro de la ciudad, y Línea 55 en rojo cubre la zona sur. " .
+                   "Si quieres ver las rutas específicas de cada una o sus vehículos disponibles, puedes entrar al panel de la empresa desde el menú principal.";
+        }
+
+        if (str_contains($preguntaLower, 'paradero') || str_contains($preguntaLower, 'parada')) {
+            return "Los paraderos están distribuidos a lo largo de todas las rutas. " .
+                   "La distancia entre uno y otro generalmente es de unos 400 a 500 metros, así que hay bastante cobertura. " .
+                   "Para ver exactamente dónde están ubicados, puedes revisar el mapa de rutas en el dashboard o usar la función de ubicación en vivo. " .
+                   "Además, los paraderos están bien señalizados con letreros de la empresa correspondiente.";
+        }
+
+        if (str_contains($preguntaLower, 'precio') || str_contains($preguntaLower, 'cuesta') || str_contains($preguntaLower, 'tarifa') || str_contains($preguntaLower, 'pasaje') || str_contains($preguntaLower, 'micro')) {
+            return "El precio del pasaje en todas las rutas es de S/ 1.50. Es un precio fijo, así que no hay descuentos especiales. " .
+                   "El pago se hace en efectivo directamente al conductor cuando subes al bus. " .
+                   "Un consejo útil: si tienes el pasaje exacto listo, todo será más rápido para ti y para los demás pasajeros.";
+        }
+
+        if (str_contains($preguntaLower, 'rastrear') || str_contains($preguntaLower, 'ubicación') || str_contains($preguntaLower, 'gps')) {
+            return "Sí, puedes rastrear los vehículos en tiempo real. " .
+                   "Desde el dashboard principal hay un botón que dice 'Ver Ubicación' que te lleva al mapa interactivo. " .
+                   "Ahí puedes ver dónde están todos los buses en este momento, su velocidad, y también puedes calcular cuánto tiempo aproximadamente va a tardar en llegar. " .
+                   "Es bastante útil si quieres planificar mejor tus viajes.";
+        }
+
+        if (str_contains($preguntaLower, 'empresa')) {
+            return "Actualmente tenemos cuatro empresas operando en el sistema. " .
+                   "San Román con su correo sanroman@transporte.com, Línea 18 en linea18@transporte.com, " .
+                   "Línea 22 en linea22@transporte.com, y Línea 55 en linea55@transporte.com. " .
+                   "Cada una maneja sus propios vehículos, choferes y rutas de forma independiente. " .
+                   "Si necesitas contactarlas o ver más detalles, puedes acceder a sus paneles desde el menú lateral del sistema.";
+        }
+
+        if (str_contains($preguntaLower, 'hola') || str_contains($preguntaLower, 'buenos') || str_contains($preguntaLower, 'buenas')) {
+            return "Hola, qué tal. Soy tu asistente virtual del sistema de transporte. " .
+                   "Puedo ayudarte con información sobre horarios, rutas, paraderos, tarifas, rastreo en vivo, o cualquier otra cosa relacionada con el transporte público en Juliaca. " .
+                   "¿Qué necesitas saber?";
+        }
+
+        if (str_contains($preguntaLower, 'ayuda') || str_contains($preguntaLower, 'help')) {
+            return "Por supuesto, estoy aquí para ayudarte. Puedo darte información sobre los horarios de las rutas, " .
+                   "qué rutas y empresas están disponibles, dónde están los paraderos, los precios de los pasajes, " .
+                   "cómo rastrear los vehículos en tiempo real, y datos de las empresas. " .
+                   "Solo pregunta lo que necesites y te responderé con la información correspondiente.";
+        }
+
+        // Respuestas a saludos y cortesía
+        if (str_contains($preguntaLower, 'gracias') || str_contains($preguntaLower, 'thank')) {
+            return "De nada, para eso estoy. Si necesitas algo más sobre el transporte público, no dudes en preguntarme. Que tengas un buen viaje.";
+        }
+
+        if (str_contains($preguntaLower, 'adios') || str_contains($preguntaLower, 'chau') || str_contains($preguntaLower, 'bye')) {
+            return "Hasta luego, que tengas un excelente día. Cualquier cosa que necesites sobre el transporte, aquí estaré.";
+        }
+
+        if (str_contains($preguntaLower, 'ok') || str_contains($preguntaLower, 'okay') || str_contains($preguntaLower, 'vale')) {
+            return "Perfecto. ¿Hay algo más en lo que pueda ayudarte sobre el transporte público?";
+        }
+
+        // Respuesta inteligente contextual
+        return $this->generateContextualResponse($preguntaLower);
     }
 
-    private function consultarAPI($mensaje, $apiKey)
+    /**
+     * Integración con OpenAI API
+     */
+    private function getOpenAIResponse($pregunta)
     {
-        $response = Http::timeout(8)
-            ->withHeaders([
-                'Authorization' => 'Bearer ' . $apiKey,
-                'HTTP-Referer' => env('APP_URL', 'http://localhost'),
-                'X-Title' => 'ChatBot Transporte Juliaca'
-            ])
-            ->post('https://openrouter.ai/api/v1/chat/completions', [
-                'model' => env('MODEL_ID', 'mistralai/mistral-7b-instruct:free'),
-                'messages' => [
-                    [
-                        'role' => 'system',
-                        'content' => "Eres asistente del transporte público de Juliaca, Perú.
-Responde corto y directo.
-NO uses markdown ni etiquetas.
-Máximo 3 líneas.
+        $openaiKey = env('OPENAI_API_KEY');
 
-RUTAS DISPONIBLES:
-- Línea 18: UPeU (Av. Tacna, Circunvalación, Tambopata)
-- Línea 22: Aeropuerto (Plaza Bolognesi, Jr. Moquegua)
-- Línea 55: Terminal Mercedes (Av. San Martín)
-- Línea 16: Terminal, Parque Cholo (Cusco-Lampa)
-- Línea 15: SENATI (Cerro Colorado, Huancané)
-- Línea 60: Parque Cholo (Huancané-Lampa)
-- Micro 1: Rinconada, Plaza Vea, Terminal
+        if (!$openaiKey) {
+            return null;
+        }
 
-Tarifas: S/1.00 adulto, S/0.50 escolar
-Sin ruta: Mototaxi S/5, Moto lineal S/4, Taxi S/10"
-                    ],
-                    ['role' => 'user', 'content' => $mensaje]
-                ],
-                'max_tokens' => 100,
-                'temperature' => 0.3
-            ]);
+        $context = "Eres un asistente virtual del sistema de transporte público de Juliaca, Perú. " .
+                   "Puedes responder preguntas sobre horarios, rutas, paraderos, tarifas (S/ 1.50), empresas de transporte (San Román, Línea 18, Línea 22, Línea 55), " .
+                   "y rastreo GPS. Responde de forma conversacional y natural, como una persona amigable. " .
+                   "Si no sabes algo específico del transporte, sé honesto pero mantén un tono profesional.";
 
-        if ($response->successful()) {
-            $data = $response->json();
-            $contenido = $data['choices'][0]['message']['content'] ?? null;
-            
-            if ($contenido) {
-                return $this->limpiarRespuesta($contenido);
-            }
+        $data = [
+            'model' => 'gpt-3.5-turbo',
+            'messages' => [
+                ['role' => 'system', 'content' => $context],
+                ['role' => 'user', 'content' => $pregunta]
+            ],
+            'max_tokens' => 200,
+            'temperature' => 0.7
+        ];
+
+        $ch = curl_init('https://api.openai.com/v1/chat/completions');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $openaiKey
+        ]);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpCode !== 200) {
+            return null;
+        }
+
+        $result = json_decode($response, true);
+
+        if (isset($result['choices'][0]['message']['content'])) {
+            return trim($result['choices'][0]['message']['content']);
         }
 
         return null;
     }
 
-    private function limpiarRespuesta($texto)
+    /**
+     * Generar respuesta contextual más inteligente
+     */
+    private function generateContextualResponse($preguntaLower)
     {
-        $texto = preg_replace('/\[.*?\]/', '', $texto);
-        $texto = preg_replace('/\*|_|~|`/', '', $texto);
-        $texto = strip_tags($texto);
-        return trim($texto);
-    }
+        // Detectar palabras clave y generar respuestas más naturales
+        $keywords = [
+            'cuando' => 'Para horarios específicos, te puedo decir que las empresas operan desde las 5-6 AM hasta las 10-11 PM dependiendo de cuál sea.',
+            'donde' => 'Puedo ayudarte a encontrar información sobre ubicaciones. Si necesitas saber dónde están los paraderos o las rutas, puedo darte más detalles.',
+            'como' => 'Te puedo explicar cómo funciona. ¿Quieres saber cómo consultar horarios, cómo rastrear un vehículo, o algo más específico?',
+            'que' => 'Sobre eso puedo ayudarte. Si me das más detalles sobre qué información necesitas del transporte público, te daré una respuesta más específica.',
+        ];
 
-    private function normalizarTexto($texto)
-    {
-        $buscar = ['á','é','í','ó','ú','ñ','Á','É','Í','Ó','Ú','Ñ'];
-        $reemplazar = ['a','e','i','o','u','n','A','E','I','O','U','N'];
-        $texto = str_replace($buscar, $reemplazar, $texto);
-        $texto = preg_replace('/[^a-z0-9\s]/', ' ', $texto);
-        return trim($texto);
-    }
-
-    private function respuestaLocal($msg)
-    {
-        // 👋 SALUDOS
-        if (preg_match('/\b(hola|buenas|buenos|hey|ola|hi)\b/', $msg)) {
-            return "👋 ¡Hola! ¿En qué puedo ayudarte con el transporte público de Juliaca?";
-        }
-
-        // 🔍 Buscar rutas por lugar
-        $lineas = $this->buscarRuta($msg);
-        if (!empty($lineas)) {
-            $respuesta = "🚍 Líneas que pasan por ahí:\n\n";
-            foreach ($lineas as $linea) {
-                $respuesta .= "{$linea['emoji']} {$linea['nombre']}\n";
-            }
-            $respuesta .= "\n💰 S/1.00 adulto | S/0.50 escolar";
-            return $respuesta;
-        }
-
-        // ❌ Lugares sin ruta
-        if (preg_match('/\b(cata|colegio cata|chilla|2 de mayo|dos de mayo)\b/', $msg)) {
-            return "❌ No hay línea directa para ese lugar.\n\n🛵 Moto lineal: S/4.00\n🛺 Mototaxi: S/5.00\n🚖 Taxi: S/10.00";
-        }
-
-        // 💰 Tarifas
-        if (preg_match('/\b(tarifa|precio|pasaje|costo|cuanto)\b/', $msg)) {
-            return "💰 Tarifas en Juliaca:\n\n🚌 Microbús: S/1.00 adulto | S/0.50 escolar\n🛵 Moto lineal: S/4.00\n🛺 Mototaxi (torito): S/5.00\n🚖 Taxi: S/10.00";
-        }
-
-        // 🔢 Líneas específicas
-        foreach ($this->rutas as $key => $linea) {
-            if (str_contains($msg, str_replace('linea_', 'linea ', $key)) || str_contains($msg, $key)) {
-                return "{$linea['emoji']} **{$linea['nombre']}**:\n{$linea['ruta']}\n💰 S/1.00 adulto | S/0.50 escolar";
+        foreach ($keywords as $key => $response) {
+            if (str_contains($preguntaLower, $key)) {
+                return $response;
             }
         }
 
-        // 📋 Listar líneas
-        if (preg_match('/\b(lineas|rutas|que lineas|cuales|todas)\b/', $msg)) {
-            return "🚍 Líneas disponibles en Juliaca:\n\n🟠 Línea 18: UPeU\n🔵 Línea 22: Aeropuerto\n🔴 Línea 55: Terminal Mercedes\n🟣 Línea 16: Terminal, Centro Comercial\n🟡 Línea 15: SENATI, Cerro Colorado\n🟤 Línea 60: Parque Cholo\n⚪ Micro 1: Rinconada, Plaza Vea\n\n💬 Pregunta por un destino o línea.";
-        }
-
-        // 🟥 Sin coincidencias
-        return "🚫 Ninguna línea registrada pasa por ahí.\nPuedes tomar:\n🛵 Moto lineal (S/4.00)\n🛺 Mototaxi (S/5.00)\n🚖 Taxi (S/10.00)";
+        // Respuesta completamente genérica pero amigable
+        return "Gracias por tu pregunta. Me enfoco en ayudarte con todo lo relacionado al transporte público de Juliaca: horarios, rutas, paraderos, precios y empresas. " .
+               "Si reformulas tu pregunta relacionándola con alguno de estos temas, te podré dar una respuesta más precisa. " .
+               "O si quieres, puedo contarte sobre los horarios, las tarifas, o cómo rastrear los buses en tiempo real.";
     }
 }
+
