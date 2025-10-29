@@ -112,10 +112,11 @@ return [
             'icon' => 'fas fa-fw fa-home',
         ],
         [
-            'text' => 'Rutas de Transporte',
-            'url'  => 'rutas',
-            'icon' => 'fas fa-route',
+            'text' => 'Mapa General de Rutas',
+            'url'  => 'rutas/mapa',
+            'icon' => 'fas fa-map-marked-alt',
         ],
+
         [
     'text' => 'Vehículos',
     'url'  => 'micro',

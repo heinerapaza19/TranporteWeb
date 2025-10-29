@@ -7,6 +7,10 @@ use App\Http\Controllers\VehiculoController;
 use App\Http\Controllers\EmpresaAuthController;
 use App\Http\Controllers\ChoferController;
 use App\Http\Controllers\MicroController;
+use App\Http\Controllers\EmpresaController;
+use App\Http\Controllers\RutaController;
+
+
 
 // ===============================
 // 🌐 PÁGINAS PÚBLICAS
@@ -76,6 +80,18 @@ Route::middleware('empresa.auth')->group(function () {
         ->name('vehiculo.destroy');
 });
 
+//informaion 
+Route::get('/empresa/naranja', [EmpresaController::class, 'naranja'])->name('empresa.naranja');
+Route::get('/empresa/18', [EmpresaController::class, 'linea18'])->name('empresa.18');
+Route::get('/empresa/55', [EmpresaController::class, 'linea55'])->name('empresa.55');
+Route::get('/empresa/22', [EmpresaController::class, 'linea22'])->name('empresa.22');
+
+//rutas de las empresas 
+Route::get('/rutas/mapa', [RutaController::class, 'mapa'])->name('rutas.mapa');
+
+
+
+
 // ===============================
 // 🚐 MICROS (versión pública o admin)
 // ===============================
@@ -96,13 +112,14 @@ Route::get('/mapa/naranja', function () {
     return view('mapas.naranja'); // resources/views/mapas/naranja.blade.php
 })->name('mapa.naranja');
 
-// ⚙️ Vista genérica opcional por línea (ejemplo: /mapa/22, /mapa/55)
-Route::get('/mapa/{linea}', function ($linea) {
-    if ($linea === '18') {
-        return view('mapas.linea18', ['linea' => $linea]);
-    } elseif ($linea === 'naranja') {
-        return view('mapas.naranja', ['linea' => $linea]);
-    } else {
-        abort(404, 'Mapa no disponible');
-    }
-})->name('mapa.linea');
+// 🟩 Vista específica para la Línea 22
+Route::get('/mapa/22', function () {
+    return view('mapas.linea22');
+})->name('mapa.22');
+
+// ===============================
+// 🟢 MAPA LÍNEA 55
+// ===============================
+Route::get('/mapa/55', function () {
+    return view('mapas.linea55');
+})->name('mapa.55');
